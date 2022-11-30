@@ -71,11 +71,11 @@ if __name__ == '__main__':
             for j in range(i+1, len(columns_lst)):
                 final_df[columns_lst[i][:3] + columns_lst[j][:3] + element] = np.where(final_df[columns_lst[i]] > final_df[columns_lst[j]], 0, 1)
 
-
+    #More feature engineering -- get rolling averages and compare to create binary columns.
     columns_lst = final_df.columns
     for i in range(2, 10):
         for column in columns_lst:
-            final_df[column + str(i) + 'day_avg'] = final_df.rolling(i).mean()
+            final_df[column + str(i) + 'day_avg'] = final_df[column].rolling(i).mean()
             final_df[column + str(i) + 'day_avg_binary'] = np.where(final_df[column + str(i) + 'day_avg'] > final_df[column], 0, 1)
 
     #Determine y -- whether the S&P500 increases the following day
