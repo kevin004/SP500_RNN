@@ -15,7 +15,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn_pandas import DataFrameMapper
 
 #If testing modified script, change the variable to 'y'
-MODIFYING = 'n'
+MODIFYING = 'y'
 
 if __name__ == '__main__':
     ########## check last modification time of files -- don't update if modified today ##########
@@ -36,7 +36,6 @@ if __name__ == '__main__':
     if os.path.exists(EXTRACT_FILE_CHECK) == False:
         print('DATA IS NOT UP TO DATE -- missing %s -- Please run data_extracting_daily first.' % EXTRACT_FILE_CHECK)
         exit()
-
 
     #Check if data has already been downloaded today.
     if mod_datestamp[:10] == current_date and os.path.exists(FILE_CHECK) and MODIFYING.upper() != 'Y':
@@ -62,16 +61,22 @@ if __name__ == '__main__':
     scaled_features = mapper.fit_transform(final_df.copy())
     final_df = pd.DataFrame(scaled_features, index=final_df.index, columns=final_df.columns)
 
-
     #Feature engineering -- add columns comparing various metrics. First standardized the data
     contains_lst = ['Open', 'High', 'Low', '_Close', ]
 
     for element in contains_lst:
         sub_df = final_df.filter(like=element)
         columns_lst = sub_df.columns
-        for i in range(len(columns_lst)):
+        for i in range(2, len(columns_lst)):
             for j in range(i+1, len(columns_lst)):
                 final_df[columns_lst[i][:3] + columns_lst[j][:3] + element] = np.where(final_df[columns_lst[i]] > final_df[columns_lst[j]], 0, 1)
+
+
+    columns_lst = final_df.columns
+    for i in range(2, 10):
+        for column in columns_lst:
+            final_df[column + str(i) + 'day_avg'] = final_df.rolling(i).mean()
+            final_df[column + str(i) + 'day_avg_binary'] = np.where(final_df[column + str(i) + 'day_avg'] > final_df[column], 0, 1)
 
     #Determine y -- whether the S&P500 increases the following day
     final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=-1) > 0, 0, 1)
