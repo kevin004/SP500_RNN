@@ -10,6 +10,6 @@ data_transform_daily.py -- Transforms the extracted data and performs some featu
 
 sp500_classifier_RNN.py -- Takes the data and creates a recurrent neural network using GRU layers to classify whether the S&P 500 will go up or down. Saves the models into the models folder for later loading and use.
 
-models -- Contains the best performing RNN models, saved as hdf5.
+models -- Contains the best performing RNN models.
 
 data -- Contains extracted finance information as well as the combined dataframe.
