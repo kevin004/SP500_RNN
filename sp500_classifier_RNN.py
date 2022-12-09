@@ -75,7 +75,7 @@ if __name__ == '__main__':
         return model
 
     #Early stopping is used for regularization here.
-    early_stopping_cb = tf.keras.callbacks.EarlyStopping(monitor="val_binary_accuracy", patience=15, restore_best_weights=True)
+    early_stopping_cb = tf.keras.callbacks.EarlyStopping(monitor="val_binary_accuracy", patience=30, restore_best_weights=True)
 
     #Custom param grid that is cycled through with values chosen randomly.
     param_grid = {
