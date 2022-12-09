@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     #Check if data has already been downloaded today.
     if os.path.exists(FILE_CHECK) and MODIFYING.upper() != 'Y':
-        print('Transformed files are already up to date. Exiting...')
+        print('Transformed files are already up to date.')
         exit()
 
     #Grab list of all files and create concattenated dataframe
