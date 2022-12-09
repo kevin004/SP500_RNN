@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     #Check if data has already been downloaded today.
     if os.path.exists(FILE_CHECK) and MODIFYING.upper() != 'Y':
-        print('Files are already up to date. Exiting...')
+        print('Extract files are already up to date. Exiting...')
         exit()
     
     #two-valued tuples -- symbol and output file name
