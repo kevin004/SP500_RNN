@@ -59,9 +59,6 @@ if __name__ == '__main__':
     data_verification_file = current_date + '_extract'
     FILE_CHECK = os.path.join(PATH, data_verification_file) #path for data verification file
 
-    print('Modified Date/Time:', mod_datestamp)
-    print('Current Date/Time:', current_date)
-
     #Check if data has already been downloaded today.
     if os.path.exists(FILE_CHECK) and MODIFYING.upper() != 'Y':
         print('Files are already up to date. Exiting...')
