@@ -1,4 +1,6 @@
 pyvenv.cfg
+Lib/
+Scripts/
 Lib/site-packages/distutils-precedence.pth
 Lib/site-packages/_distutils_hack/__init__.py
 Lib/site-packages/_distutils_hack/override.py
