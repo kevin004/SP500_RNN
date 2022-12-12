@@ -2,7 +2,9 @@ pyvenv.cfg
 Lib/
 Scripts/
 sp500_rnn/data/*
+!sp500_rnn/data/.gitkeep 
 sp500_rnn/models/*
+!sp500_rnn/models/.gitkeep 
 __pycache__/
 pyvenv.cfg
 .dist/
