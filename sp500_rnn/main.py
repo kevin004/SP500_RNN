@@ -16,6 +16,9 @@ run(transform_module)
 while True:
     combos = input('How many combinations (custom Grid Search) of values would you like to test in classifier? ')
     try:
+        if int(combos) == 0:
+            print('Cannot have 0 combinations.')
+            continue
         combos = int(combos)
         break
     except:
