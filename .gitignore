@@ -1,9 +1,9 @@
 pyvenv.cfg
-Lib/
-Scripts/
+Lib
+Scripts
 sp500_rnn/data/*
 sp500_rnn/models/*
-__pycache__/
+__pycache__
 pyvenv.cfg
 .dist/
-Include/
+Include
