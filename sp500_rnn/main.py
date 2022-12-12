@@ -14,7 +14,7 @@ run(extract_module)
 run(transform_module)
 #Combinations is the number of random parameter grid values to test out -- the best model is saved.
 while True:
-    combos = input('How many combinations of values would you like to test in classifier? ')
+    combos = input('How many combinations (custom Grid Search) of values would you like to test in classifier? ')
     try:
         combos = int(combos)
         break

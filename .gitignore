@@ -1,5 +1,5 @@
 pyvenv.cfg
 Lib/*
-Scripts/*
+Scripts/
 sp500_rnn/data/*
 sp500_rnn/models/*
