@@ -7,7 +7,6 @@ To run/test -- navigate to sp500_rnn and run 'python3 main.py'
 ```
 C:.
 │   .gitignore
-│   pyvenv.cfg
 │   README.md
 │   requirements.txt
 │
@@ -19,9 +18,10 @@ C:.
     │   __init__.py
     │
     ├───data
-    ├───models
-    └───__pycache__
-            data_extracting_daily.cpython-310.pyc
+    │       .gitkeep
+    │
+    └───models
+            .gitkeep
 ```
 
 main.py -- Runs all the modules in the correct order. To test, run this.
