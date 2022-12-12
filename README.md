@@ -2,6 +2,26 @@
 Fetches various financial information using the yahoo finance api, tranforms the data into a single dataframe,
 adds quite a few customer features, and finally sends this into a recurrent neural network for predicting whether the S&P 500 will go up or down.
 
+```
+C:.
+│   .gitignore
+│   pyvenv.cfg
+│   README.md
+│   requirements.txt
+│
+└───sp500_rnn
+    │   data_extracting_daily.py
+    │   data_transform_daily.py
+    │   main.py
+    │   sp500_classifier_RNN.py
+    │   __init__.py
+    │
+    ├───data
+    ├───models
+    └───__pycache__
+            data_extracting_daily.cpython-310.pyc
+```
+
 main.py -- Runs all the modules in the correct order. To test, run this.
 
 data_extracting_daily.py -- Extracts data using the yahoo finance api.
