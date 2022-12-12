@@ -1,9 +1,6 @@
 '''
 Script to transform data for more recurrent neural network. Also adds in some 
 custom features.
-
-This works as expected, but still trying to improve the performance through 
-vectorization for the engineered features.
 '''
 import pandas as pd
 import numpy as np
