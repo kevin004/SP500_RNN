@@ -2,6 +2,9 @@
 Fetches various financial information using the yahoo finance api, tranforms the data into a single dataframe,
 adds quite a few customer features, and finally sends this into a recurrent neural network for predicting whether the S&P 500 will go up or down.
 
+Automatically hones in on the best set of hyperparameters found by retraining and evaluating model on smaller range of hyperparameters closer to
+the optimum one previously found.
+
 To run/test -- navigate to sp500_rnn and run 'python3 main.py'
 
 ```
