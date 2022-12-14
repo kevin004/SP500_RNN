@@ -7,7 +7,8 @@ values closer to the first rounds optimal set of hyperparameters. Could use this
 idea to continue to hone in on the best hyperparemeters. Could also use previous best 
 parameters found to update the initial parameter grid.
 
-After finding the best set of hyperparameters, will test out varying batch sizes.
+After finding the best set of hyperparameters, test out varying batch sizes -- probably
+go smaller (e.g., 16, 32).
 
 To do:
 Add in monte carlo dropout.
@@ -43,7 +44,8 @@ def df_to_ds(data, targets, sequence_length=100, batch_size=64, shuffle=False):
     return ds
 
 #Create binary classifier.
-def create_binary_model(input_length, layers=1, optimizer='SGD', n_neurons=50, loss='BinaryCrossentropy', learning_rate=1e-2, clipnorm=True):
+def create_binary_model(input_length, layers=1, optimizer=tf.keras.optimizers.SGD, 
+    n_neurons=50, loss='BinaryCrossentropy', learning_rate=1e-2, clipnorm=True):
     model=tf.keras.Sequential()
     model.add(tf.keras.layers.InputLayer(input_shape=[None, input_length]))
     for _ in range(layers):
@@ -51,9 +53,9 @@ def create_binary_model(input_length, layers=1, optimizer='SGD', n_neurons=50, l
     model.add(tf.keras.layers.GRU(n_neurons))
     model.add(tf.keras.layers.Dense(1))
     if clipnorm == True:
-        optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, clipnorm=1.0)
+        optimizer = optimizer(learning_rate=learning_rate, clipnorm=1.0)
     else:
-        optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate)
+        optimizer = optimizer(learning_rate=learning_rate)
     model.compile(loss=loss, optimizer=optimizer, metrics=["binary_accuracy"])
     return model
 
@@ -68,7 +70,7 @@ def train_models(param_grid, combinations, input_length, callbacks):
             combos[key] = param_grid[key][val]
         print(combos)
         rnn_model = create_binary_model(input_length=input_length, **combos)
-        history = rnn_model.fit(train_ds, validation_data=valid_ds, epochs=2, callbacks=[callbacks])
+        history = rnn_model.fit(train_ds, validation_data=valid_ds, epochs=300, callbacks=[callbacks])
         val_loss = min(history.history['val_loss'])
         print('Validation loss: %s' % val_loss)
         if val_loss < best_loss:
@@ -81,7 +83,7 @@ def evaluate_models(model, final_training=False):
     score = model[0].evaluate(test_ds)
     best_model = model[0]
     best_combo = model[1]
-    print('Best score: %s hyperparameters %s' % (score, best_combo))
+    print('Best test score: %s hyperparameters %s' % (score[1], best_combo))
     #If this is the final round of hyperparameter tuning, return the best model to be saved
     if final_training == True:
         return best_model
@@ -126,7 +128,7 @@ if __name__ == '__main__':
     try:
         COMBINATIONS = int(cmd_line_args[1])
     except:
-        COMBINATIONS = 5
+        COMBINATIONS = 10
     DF_PATH = P / 'data' / 'final_df.csv'
 
     #Early stopping is used for regularization here.
