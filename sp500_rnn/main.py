@@ -7,11 +7,10 @@ from subprocess import run
 extract_module = 'python3 data_extracting_daily.py'
 #Transforms the data and performs feature engineering
 transform_module = 'python3 data_transform_daily.py'
-#Runs the classifier
-rnn_classifier_module = 'python3 data_transform_daily.py'
 
 run(extract_module)
 run(transform_module)
+
 #Combinations is the number of random parameter grid values to test out -- the best model is saved.
 while True:
     combos = input('How many combinations (custom Grid Search) of values would you like to test in classifier? ')

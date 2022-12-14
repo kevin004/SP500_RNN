@@ -10,10 +10,29 @@ import yfinance as yf
 #If testing modified script, change the variable to 'y'
 MODIFYING = 'n'
 
+#Create data directory to store files and exit if data is up to date.
+def create_dir_and_early_exit_check(path):
+    #Make a directory for data files
+    try:
+        os.mkdir(PATH)
+    except:
+        print('data directory already exists.')
+
+    current_date_time = datetime.now() #Get current date time
+    current_date = str(current_date_time)[:10] # convert datetime into string
+    data_verification_file = current_date + '_extract'
+    file_check = os.path.join(PATH, data_verification_file) #path for data verification file
+
+    #Check if data has already been downloaded today.
+    if os.path.exists(file_check) and MODIFYING.upper() != 'Y':
+        print('Extract files are already up to date.')
+        exit()
+    return file_check, current_date
+
 #Run at end to create file to ensure script finished.
-def ensure_script_finished(path, file_check, data_step):
+def ensure_script_finished(path, file_check, data_step_keyword):
     for file in os.listdir(path):
-        if data_step in file:
+        if data_step_keyword in file:
             print('%s deleted.' % file)
             os.remove(path + '\\' + file)
 
@@ -37,32 +56,18 @@ def data_verifier(func):
 @data_verifier
 def fetch_and_save_data(path, output_file_name, symbol, today):
     data = yf.download(symbol,'1950-11-16', today)
-    #symbol = symbol[1:] if '^' in symbol else symbol
     data = data.add_prefix(symbol + '_')
     output_file_path = os.path.join(path, output_file_name)
     data.to_csv(output_file_path)
 
 if __name__ == '__main__':
-    ########## check last modification time of files -- don't update if modified today ##########
+    #Constants
     PATH = '.\\data'
 
-    #Make a directory for data files
-    try:
-        os.mkdir(PATH)
-    except:
-        print('Directory already exists.')
-
-    mod_timestamp = os.path.getmtime(PATH) #Get filed modification time
-    mod_datestamp = str(datetime.fromtimestamp(mod_timestamp))[:10] # convert timestamp into DateTime object
-    current_date_time = datetime.now() #Get current date time
-    current_date = str(current_date_time)[:10] # convert datetime into string
-    data_verification_file = current_date + '_extract'
-    FILE_CHECK = os.path.join(PATH, data_verification_file) #path for data verification file
-
-    #Check if data has already been downloaded today.
-    if os.path.exists(FILE_CHECK) and MODIFYING.upper() != 'Y':
-        print('Extract files are already up to date.')
-        exit()
+    print('Beginning data extraction...')
+    #Creates data directory to store files and exit if data is up to date. Returns verification file and current date.
+    #File to verify is used to check if the data is up to date by creating a file with the date at the end of the script.
+    file_check, current_date = create_dir_and_early_exit_check(path=PATH)
     
     #two-valued tuples -- symbol and output file name
     data_tuple = (('SP500_data.csv', '^GSPC'),
@@ -93,6 +98,6 @@ if __name__ == '__main__':
         print(f, current_date)
         fetch_and_save_data(PATH, f, ticker, current_date[:10])
        
-
+    print('Data extraction finished.')
     #Create file with todays date to ensure script finished.
-    ensure_script_finished(PATH, FILE_CHECK, 'extract')
+    ensure_script_finished(PATH, file_check, 'extract')
