@@ -92,7 +92,16 @@ if __name__ == '__main__':
                   ('SILVER_data.csv', 'SI=F'),
                   ('PLATINUM_data.csv', 'PL=F'),
                   ('CRUDE_data.csv', 'CL=F'),
-                  ('BRENT_data.csv', 'BZ=F'))
+                  ('BRENT_data.csv', 'BZ=F'),
+                  ('BTC_data.csv', 'BTC-USD'),
+                  ('RUT_data.csv', '^RUT'),
+                  ('FTSE_data.csv', '^FTSE'),
+                  ('Russia_data.csv', 'IMOEX.ME'),
+                  ('Nikkei.csv', '^N225'), #Just added -- not sure if it will hurt performance!
+                  ('HSI_data.csv', '^HSI'),
+                  ('Shenzhen.csv', '399001.SZ'),
+                  ('Jakarta.csv', '^JKSE'),
+                  ('MXX.csv', '^MXX'))
 
     for f, ticker in data_tuple:
         print(f, current_date)

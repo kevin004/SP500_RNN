@@ -66,8 +66,8 @@ def standardize_and_sort_df(final_df):
 
 #Get the rolling averages for all columns and compare vs current value.
 #Feature engineering 1
-def concat_rolling_average_and_binary(final_df, columns_lst, data_len):
-    rolling_average_df = pd.concat([final_df[columns_lst].add_prefix(f'{i}_day_avg').rolling(i).mean() for i in range(2, 10)], axis=1)
+def concat_rolling_average_and_binary(final_df, columns_lst, data_len, stride=1):
+    rolling_average_df = pd.concat([final_df[columns_lst].add_prefix(f'{i}_day_avg').rolling(i).mean() for i in range(2, data_len, stride)], axis=1)
 
     #Get column names for all rolling averages
     rolling_average_columns = rolling_average_df.columns
@@ -78,7 +78,7 @@ def concat_rolling_average_and_binary(final_df, columns_lst, data_len):
     final_df = pd.concat([final_df, rolling_average_df, binary_columns_df], axis=1)
     
     #Populate the binary_columns with data.
-    for i in range(2, data_len):
+    for i in range(2, data_len, stride):
         for column in columns_lst:
             col_name = f'binary_{i}_day_avg' + column
             final_df[col_name] = np.where(final_df[f'{i}_day_avg' + column] >= final_df[column], 0, 1)
@@ -132,19 +132,20 @@ if __name__ == '__main__':
 
     ## FEATURE ENGINEERING ##
     columns_lst = list(final_df.columns)
-    data_len = 10
+    data_len = 300
+    stride = 10
     filter_condition = 'Close' #Possible values: 'High', 'Low', 'Open' ,'Close', 'Volume'
 
     #Get the rolling averages for all columns and compare vs current value.
     #Feature engineering 1
-    final_df = concat_rolling_average_and_binary(final_df=final_df, columns_lst=columns_lst, data_len=data_len)
+    final_df = concat_rolling_average_and_binary(final_df=final_df, columns_lst=columns_lst, data_len=data_len, stride=stride)
 
     #Create another condition for feature engineering, comparing every 'close' column to the others.
     #Feature engineering 2
-    final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition)
+    #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition)
 
     #Determine y -- whether the S&P500 increases the following day
-    final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=-1) > 0, 0, 1)
+    final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
 
     #Save file
     file_name = os.path.join(PATH, 'final_df.csv')

@@ -19,7 +19,7 @@ from pathlib import Path
 from datetime import datetime
 from random import randint
 import sys
-from keras.callbacks import History 
+from keras.callbacks import History
 
 #Fetch and split dataframes
 def fetch_df_and_split_data(df_path):
@@ -36,15 +36,15 @@ def fetch_df_and_split_data(df_path):
 def df_to_ds(data, targets, sequence_length=100, batch_size=64, shuffle=False):
     arr = data.to_numpy()
     ds = tf.keras.utils.timeseries_dataset_from_array(
-        data = arr,
-        targets = targets,
+        data = arr[:-1],
+        targets = targets[sequence_length:],
         sequence_length = sequence_length,
         batch_size = batch_size,
     )
     return ds
 
 #Create binary classifier.
-def create_binary_model(input_length, layers=1, optimizer=tf.keras.optimizers.SGD, 
+def create_binary_model(input_length, layers=1, optimizer=tf.keras.optimizers.Nadam, 
     n_neurons=50, loss='BinaryCrossentropy', learning_rate=1e-2, clipnorm=True):
     model=tf.keras.Sequential()
     model.add(tf.keras.layers.InputLayer(input_shape=[None, input_length]))
@@ -73,22 +73,31 @@ def train_models(param_grid, combinations, input_length, callbacks):
         history = rnn_model.fit(train_ds, validation_data=valid_ds, epochs=300, callbacks=[callbacks])
         val_loss = min(history.history['val_loss'])
         print('Validation loss: %s' % val_loss)
+        print('Best previous loss: %s' % best_loss)
         if val_loss < best_loss:
             best_loss = val_loss
-            model = rnn_model, combos
-    return model
+            best_model = rnn_model, combos
+    return best_model
 
 #Evaluate models
 def evaluate_models(model, final_training=False):
     score = model[0].evaluate(test_ds)
     best_model = model[0]
     best_combo = model[1]
-    print('Best test score: %s hyperparameters %s' % (score[1], best_combo))
+    print('\n *** Best test score: %s Hyperparameters %s ***\n' % (score[1], best_combo))
     #If this is the final round of hyperparameter tuning, return the best model to be saved
     if final_training == True:
         return best_model
     else:
         return best_combo
+
+def calculate_returns(predictions, actual, closing_prices):
+    returns = 0
+    for i in range(len(predictions)):
+
+        if predictions[i] == actual[i]:
+            pass
+
 
 #Once best hyperparameters are found -- hone in on the best set by testing a smaller range
 #Dynamically creates param_grid based on the previous best set of hyperparameters
@@ -98,9 +107,9 @@ def dynamic_hyperparameter_tuning(best_combo):
     best_n_neurons = best_combo['n_neurons']
     best_layer = best_combo['layers']
     learning_rates = [best_lr - best_lr_half, best_lr, best_lr + best_lr_half]
-    n_neurons = [best_n_neurons - 10, best_n_neurons, best_n_neurons + 10]
+    n_neurons = [best_n_neurons - 20, best_n_neurons, best_n_neurons + 20]
     layers = [best_layer - 1, best_layer, best_layer + 1]
-    clipnorm = [True, False]
+    clipnorm = [True]
     param_grid = {
         'learning_rate': learning_rates,
         'n_neurons': n_neurons,
@@ -113,15 +122,15 @@ def dynamic_hyperparameter_tuning(best_combo):
 if __name__ == '__main__':
     #CONSTANTS
     P = Path('.')
-    SEQUENCE_LENGTH = 100
+    SEQUENCE_LENGTH = 30
     BATCH_SIZE = 64
     #Custom param grid that is cycled through with values chosen randomly.
     #Could change initial start up hyperparameters based on previous results.
     PARAM_GRID = {
-        'learning_rate': [1e-2, 1e-3, 1e-4, 1e-5], 
-        'n_neurons': [20, 30, 40, 50, 100], 
-        'layers': [3, 4, 5, 6, 7], 
-        'clipnorm': [True, False]
+        'learning_rate': [1e-3, 1e-4, 1e-5], 
+        'n_neurons': [150, 200, 250], 
+        'layers': [4, 5, 6], 
+        'clipnorm': [True]
     }
     #Grabs the number of combinations to test.
     cmd_line_args = sys.argv  
@@ -139,7 +148,7 @@ if __name__ == '__main__':
     input_length = len(df.columns)
 
     #Prepares the datasets.
-    train_ds = df_to_ds(data=train_df, targets=train_df.loc[:, 'y'], sequence_length=SEQUENCE_LENGTH, batch_size=BATCH_SIZE)
+    train_ds = df_to_ds(data=train_df, targets=train_df.loc[:, 'y'], sequence_length=SEQUENCE_LENGTH, batch_size=BATCH_SIZE, shuffle=True)
     valid_ds = df_to_ds(data=valid_df, targets=valid_df.loc[:, 'y'], sequence_length=SEQUENCE_LENGTH, batch_size=BATCH_SIZE)
     test_ds = df_to_ds(data=test_df, targets=test_df.loc[:, 'y'], sequence_length=SEQUENCE_LENGTH, batch_size=BATCH_SIZE)
 
