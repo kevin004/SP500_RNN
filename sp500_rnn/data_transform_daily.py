@@ -116,7 +116,7 @@ def binary_comparison(final_df, filter_condition, data_len):
 
 if __name__ == '__main__':
     ########## check last modification time of files -- don't update if modified today ##########
-    PATH = '.\\data'
+    PATH = Path('./data')
 
     print('Beginning transforming and feature engineering...')
     #Get early_exit files -- these files are generated when data_extract_daily and data_transform_daily finish, respectively.
