@@ -123,7 +123,7 @@ if __name__ == '__main__':
     #CONSTANTS
     P = Path('.')
     SEQUENCE_LENGTH = 30
-    BATCH_SIZE = 64
+    BATCH_SIZE = 128
     #Custom param grid that is cycled through with values chosen randomly.
     #Could change initial start up hyperparameters based on previous results.
     PARAM_GRID = {

@@ -44,8 +44,9 @@ def fetch_dfs_and_concat(path):
     glob_path = os.path.join(path, '*.csv')
     df_lst = glob.glob(glob_path)
     #If final dataframe already created, delete them.
-    if '.\\data\\final_df.csv' in df_lst:
-        df_lst.remove('.\\data\\final_df.csv')
+    removal_file = str(Path('./data/final_df.csv'))
+    if removal_file in df_lst:
+        df_lst.remove(removal_file)
     #Grab list of dataframes
     dataframes = [pd.read_csv(f) for f in df_lst]
     #Concat dataframes.
