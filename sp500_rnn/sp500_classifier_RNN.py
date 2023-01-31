@@ -165,6 +165,6 @@ if __name__ == '__main__':
 
     #Save best model
     current_time = str(datetime.now())
-    model_version = 'rnn_model' + current_time[:9]
+    model_version = 'rnn_model' + current_time[:10]
     file_path = P / 'models' / model_version
     best_model.save(file_path)
