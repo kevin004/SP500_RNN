@@ -23,8 +23,8 @@ def get_exit_files(path):
     current_date = str(current_date_time)[:10] # convert datetime into string
     extract_verification_file = current_date + '_extract'
     data_verification_file = current_date + '_transform'
-    file_check = os.path.join(PATH, data_verification_file) #path for data verification file
-    extract_file_check = os.path.join(PATH, extract_verification_file) #path for extract verification file
+    file_check = os.path.join(path, data_verification_file) #path for data verification file
+    extract_file_check = os.path.join(path, extract_verification_file) #path for extract verification file
     return extract_file_check, file_check
 
 #Check if data is current and if it has already been transformed.
@@ -116,12 +116,11 @@ def binary_comparison(final_df, filter_condition, data_len):
 
 if __name__ == '__main__':
     ########## check last modification time of files -- don't update if modified today ##########
-    PATH = Path('./data')
+    PATH = '.\\data'
 
     print('Beginning transforming and feature engineering...')
     #Get early_exit files -- these files are generated when data_extract_daily and data_transform_daily finish, respectively.
     extract_file_check, file_check = get_exit_files(PATH)
-
     #Exit if extract is out of date and needs to be run. Also exit if both extract and transform are up to date.
     early_exit(extract_file=extract_file_check, transformed_file=file_check)
 
@@ -133,7 +132,7 @@ if __name__ == '__main__':
 
     ## FEATURE ENGINEERING ##
     columns_lst = list(final_df.columns)
-    data_len = 300
+    data_len = 100
     stride = 10
     filter_condition = 'Close' #Possible values: 'High', 'Low', 'Open' ,'Close', 'Volume'
 
@@ -146,15 +145,7 @@ if __name__ == '__main__':
     #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
     
     #Determine y -- whether the S&P500 increases the following day
-    target = Path('./data/SP500_data.csv')
-    target_df = pd.read_csv(target)
-    target_df['y'] = 0
-    #target_df['y'] = np.where(target_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
-    target_df['y'] = np.where(target_df['^GSPC_Close'] - target_df['^GSPC_Open'] > 0, 1, 0)
-    #Target y is on the next day as we want to include y in our classifier.
-
-    final_df = pd.merge(final_df, target_df[['Date', 'y']], on='Date', how='inner')
-    final_df.set_index('Date', inplace=True)
+    final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
 
     #Save file
     file_name = os.path.join(PATH, 'final_df.csv')
