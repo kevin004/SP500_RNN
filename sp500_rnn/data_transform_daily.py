@@ -90,7 +90,7 @@ def concat_rolling_average_and_binary(final_df, columns_lst, data_len, stride=1)
 
 #Create another condition for feature engineering, comparing every 'close' column to the others.
 #Feature engineering 2
-def binary_comparison(final_df, filter_condition):
+def binary_comparison(final_df, filter_condition, data_len):
     col_lst = []
     #Create columns list and empty dataframe before inserting for improved performance.
     columns_lst = final_df.filter(like='Close').columns
@@ -142,7 +142,7 @@ if __name__ == '__main__':
 
     #Create another condition for feature engineering, comparing every 'close' column to the others.
     #Feature engineering 2
-    #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition)
+    #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
 
     #Determine y -- whether the S&P500 increases the following day
     final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
