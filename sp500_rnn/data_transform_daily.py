@@ -143,9 +143,17 @@ if __name__ == '__main__':
     #Create another condition for feature engineering, comparing every 'close' column to the others.
     #Feature engineering 2
     #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
-
+    
     #Determine y -- whether the S&P500 increases the following day
-    final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
+    target = Path('./data/GSPC.csv')
+    target_df = pd.read_csv(target)
+    target_df['y'] = 0
+    #target_df['y'] = np.where(target_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
+    target_df['y'] = np.where(target_df['^GSPC_Close'] - target_df['^GSPC_Open'] > 0, 1, 0)
+    #Target y is on the next day as we want to include y in our classifier.
+
+    final_df = pd.merge(final_df, target_df[['Date', 'y']], on='Date', how='inner')
+    final_df.set_index('Date', inplace=True)
 
     #Save file
     file_name = os.path.join(PATH, 'final_df.csv')
