@@ -12,6 +12,7 @@ from sys import exit
 from functools import reduce
 from sklearn.preprocessing import StandardScaler
 from sklearn_pandas import DataFrameMapper
+from pathlib import Path
 
 #If testing modified script, change the variable to 'y'
 MODIFYING = 'n'
