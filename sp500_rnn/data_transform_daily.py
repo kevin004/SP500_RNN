@@ -93,7 +93,7 @@ def concat_rolling_average_and_binary(final_df, columns_lst, data_len, stride=1)
 def binary_comparison(final_df, filter_condition, data_len):
     col_lst = []
     #Create columns list and empty dataframe before inserting for improved performance.
-    columns_lst = final_df.filter(like='Close').columns
+    columns_lst = final_df.filter(like=filter_condition).columns
     for i in range(2, len(columns_lst), data_len - 1):
         for j in range(i+1, len(columns_lst), data_len - 1):
             col_name = columns_lst[i][5:] + columns_lst[j][5:] + 'close'
