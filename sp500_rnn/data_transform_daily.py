@@ -145,7 +145,7 @@ if __name__ == '__main__':
     #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
     
     #Determine y -- whether the S&P500 increases the following day
-    target = Path('./data/GSPC.csv')
+    target = Path('./data/SP500_data.csv')
     target_df = pd.read_csv(target)
     target_df['y'] = 0
     #target_df['y'] = np.where(target_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
