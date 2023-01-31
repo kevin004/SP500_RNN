@@ -14,7 +14,7 @@ MODIFYING = 'n'
 def create_dir_and_early_exit_check(path):
     #Make a directory for data files
     try:
-        os.mkdir(PATH)
+        os.mkdir(path)
     except:
         print('data directory already exists.')
 
