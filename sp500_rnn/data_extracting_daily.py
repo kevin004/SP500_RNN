@@ -5,7 +5,8 @@ import os
 import pandas as pd
 from sys import exit
 from datetime import datetime
-import yfinance as yf   
+import yfinance as yf
+from pathlib import Path
 
 #If testing modified script, change the variable to 'y'
 MODIFYING = 'n'
@@ -62,7 +63,7 @@ def fetch_and_save_data(path, output_file_name, symbol, today):
 
 if __name__ == '__main__':
     #Constants
-    PATH = '.\\data'
+    PATH = Path('./data')
 
     print('Beginning data extraction...')
     #Creates data directory to store files and exit if data is up to date. Returns verification file and current date.
