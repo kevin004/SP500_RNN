@@ -24,6 +24,10 @@ from keras.callbacks import History
 #Fetch and split dataframes
 def fetch_df_and_split_data(df_path):
     df = pd.read_csv(df_path)
+    print(df)
+    print(df['^GSPC_Close'])
+    print(df['y'].head(50))
+    print(df['y'].tail(50))
     train_to_date = int(len(df) * 0.8)
     valid_to_date = int(len(df) * 0.9)
 

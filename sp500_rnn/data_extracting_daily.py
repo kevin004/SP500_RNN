@@ -35,7 +35,8 @@ def ensure_script_finished(path, file_check, data_step_keyword):
     for file in os.listdir(path):
         if data_step_keyword in file:
             print('%s deleted.' % file)
-            os.remove(path + '\\' + file)
+            removal_file = path / file
+            os.remove(removal_file)
 
     f = open(file_check, 'w')
     f.close()
@@ -56,7 +57,7 @@ def data_verifier(func):
 #function for downloading and saving the data as a csv file
 @data_verifier
 def fetch_and_save_data(path, output_file_name, symbol, today):
-    data = yf.download(symbol,'1950-11-16', today)
+    data = yf.download(symbol,'2000-01-01', today)
     data = data.add_prefix(symbol + '_')
     output_file_path = os.path.join(path, output_file_name)
     data.to_csv(output_file_path)

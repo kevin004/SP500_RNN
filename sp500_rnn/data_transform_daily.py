@@ -52,7 +52,6 @@ def fetch_dfs_and_concat(path):
     #Concat dataframes.
     final_df = reduce(lambda df1,df2: pd.merge(df1,df2,on='Date', how='outer'), dataframes)
     final_df.drop(final_df.filter(like='Adj').columns, axis=1, inplace=True)
-    final_df['y'] = 0
     #Make matrix sparse by adding in a lot of 0s
     final_df.fillna(value=0, inplace=True)
     final_df.set_index('Date', inplace=True)
@@ -146,7 +145,15 @@ if __name__ == '__main__':
     #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
     
     #Determine y -- whether the S&P500 increases the following day
-    final_df['y'] = np.where(final_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
+    target = Path('./data/SP500_data.csv')
+    target_df = pd.read_csv(target)
+    target_df['y'] = 0
+    #target_df['y'] = np.where(target_df['^GSPC_Close'].diff(periods=1) > 0, 1, 0)
+    target_df['y'] = np.where(target_df['^GSPC_Close'] - target_df['^GSPC_Open'] > 0, 1, 0)
+    
+    final_df = pd.merge(final_df, target_df[['Date', 'y']], on='Date', how='inner')
+    final_df.set_index('Date', inplace=True)
+    print(final_df['y'])
 
     #Save file
     file_name = os.path.join(PATH, 'final_df.csv')
