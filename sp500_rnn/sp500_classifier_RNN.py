@@ -24,10 +24,6 @@ from keras.callbacks import History
 #Fetch and split dataframes
 def fetch_df_and_split_data(df_path):
     df = pd.read_csv(df_path)
-    print(df)
-    print(df['^GSPC_Close'])
-    print(df['y'].head(50))
-    print(df['y'].tail(50))
     train_to_date = int(len(df) * 0.8)
     valid_to_date = int(len(df) * 0.9)
 
@@ -126,14 +122,14 @@ def dynamic_hyperparameter_tuning(best_combo):
 if __name__ == '__main__':
     #CONSTANTS
     P = Path('.')
-    SEQUENCE_LENGTH = 30
-    BATCH_SIZE = 128
+    SEQUENCE_LENGTH = 10
+    BATCH_SIZE = 32
     #Custom param grid that is cycled through with values chosen randomly.
     #Could change initial start up hyperparameters based on previous results.
     PARAM_GRID = {
-        'learning_rate': [1e-3, 1e-4, 1e-5], 
-        'n_neurons': [150, 200, 250], 
-        'layers': [4, 5, 6], 
+        'learning_rate': [1e-3, 1e-4, 1e-5, 1e-6], 
+        'n_neurons': [100, 150, 200], 
+        'layers': [5, 6, 7], 
         'clipnorm': [True]
     }
     #Grabs the number of combinations to test.
@@ -145,7 +141,7 @@ if __name__ == '__main__':
     DF_PATH = P / 'data' / 'final_df.csv'
 
     #Early stopping is used for regularization here.
-    early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=20, restore_best_weights=True)
+    early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=50, restore_best_weights=True)
     
     #Fetch and split dataframe
     train_df, valid_df, test_df, df = fetch_df_and_split_data(df_path=DF_PATH)

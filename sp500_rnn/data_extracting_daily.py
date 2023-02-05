@@ -17,7 +17,7 @@ def create_dir_and_early_exit_check(path):
     try:
         os.mkdir(path)
     except:
-        print('data directory already exists.')
+        pass
 
     current_date_time = datetime.now() #Get current date time
     current_date = str(current_date_time)[:10] # convert datetime into string

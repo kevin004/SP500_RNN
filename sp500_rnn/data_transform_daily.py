@@ -66,7 +66,19 @@ def standardize_and_sort_df(final_df):
     return final_df
 
 #Get the rolling averages for all columns and compare vs current value.
-#Feature engineering 1
+
+#Get how much the data changes from the day before and concat to final df
+#Feature Engineering 1
+def concat_data_change(df):
+    columns_lst = final_df.columns
+    #Create new df with how much each value changes from the previous day
+    amt_changed_df = pd.concat([final_df[columns_lst].add_prefix(f'amt_changed').diff(periods=1)], axis=1)
+    #print(amt_changed_df)
+    df = pd.concat([final_df, amt_changed_df], axis=1)
+    return df
+
+
+#Feature engineering 2
 def concat_rolling_average_and_binary(final_df, columns_lst, data_len, stride=1):
     rolling_average_df = pd.concat([final_df[columns_lst].add_prefix(f'{i}_day_avg').rolling(i).mean() for i in range(2, data_len, stride)], axis=1)
 
@@ -132,17 +144,19 @@ if __name__ == '__main__':
 
     ## FEATURE ENGINEERING ##
     columns_lst = list(final_df.columns)
-    data_len = 100
-    stride = 10
+    data_len = 10
+    stride = 1
     filter_condition = 'Close' #Possible values: 'High', 'Low', 'Open' ,'Close', 'Volume'
 
     #Get the rolling averages for all columns and compare vs current value.
     #Feature engineering 1
+    final_df = concat_data_change(final_df)
+    #Feature engineering 2
     final_df = concat_rolling_average_and_binary(final_df=final_df, columns_lst=columns_lst, data_len=data_len, stride=stride)
 
     #Create another condition for feature engineering, comparing every 'close' column to the others.
-    #Feature engineering 2
-    #final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
+    #Feature engineering 3
+    final_df = binary_comparison(final_df=final_df, filter_condition=filter_condition, data_len=data_len)
     
     #Determine y -- whether the S&P500 increases the following day
     target = Path('./data/SP500_data.csv')
