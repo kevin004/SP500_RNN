@@ -114,12 +114,12 @@ if __name__ == '__main__':
     #CONSTANTS
     P = Path('.')
     SEQUENCE_LENGTH = 10
-    BATCH_SIZE = 32
+    BATCH_SIZE = 16
     #Custom param grid that is cycled through with values chosen randomly.
     #Could change initial start up hyperparameters based on previous results.
     PARAM_GRID = {
-        'learning_rate': [1e-3, 1e-4, 1e-5, 1e-6], 
-        'n_neurons': [100, 150, 200], 
+        'learning_rate': [1e-3, 1e-4, 1e-5, 1e-6, 1e-7], 
+        'n_neurons': [100, 150, 200, 250, 300], 
         'layers': [5, 6, 7], 
         'clipnorm': [True]
     }
