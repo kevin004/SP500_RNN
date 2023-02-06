@@ -75,7 +75,6 @@ def concat_data_change(df):
     df = pd.concat([final_df, amt_changed_df], axis=1)
     return df
 
-
 #Feature engineering 2
 def concat_rolling_average_and_binary(final_df, columns_lst, data_len, stride=1):
     rolling_average_df = pd.concat([final_df[columns_lst].add_prefix(f'{i}_day_avg').rolling(i).mean() for i in range(2, data_len, stride)], axis=1)
