@@ -65,8 +65,6 @@ def standardize_and_sort_df(final_df):
     final_df = final_df.sort_index()
     return final_df
 
-#Get the rolling averages for all columns and compare vs current value.
-
 #Get how much the data changes from the day before and concat to final df
 #Feature Engineering 1
 def concat_data_change(df):
@@ -102,7 +100,7 @@ def concat_rolling_average_and_binary(final_df, columns_lst, data_len, stride=1)
     return final_df
 
 #Create another condition for feature engineering, comparing every 'close' column to the others.
-#Feature engineering 2
+#Feature engineering 3
 def binary_comparison(final_df, filter_condition, data_len):
     col_lst = []
     #Create columns list and empty dataframe before inserting for improved performance.

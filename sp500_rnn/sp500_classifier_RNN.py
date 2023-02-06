@@ -19,7 +19,6 @@ from pathlib import Path
 from datetime import datetime
 from random import randint
 import sys
-from keras.callbacks import History
 
 #Fetch and split dataframes
 def fetch_df_and_split_data(df_path):
@@ -90,14 +89,6 @@ def evaluate_models(model, final_training=False):
         return best_model
     else:
         return best_combo
-
-def calculate_returns(predictions, actual, closing_prices):
-    returns = 0
-    for i in range(len(predictions)):
-
-        if predictions[i] == actual[i]:
-            pass
-
 
 #Once best hyperparameters are found -- hone in on the best set by testing a smaller range
 #Dynamically creates param_grid based on the previous best set of hyperparameters
