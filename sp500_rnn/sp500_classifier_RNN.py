@@ -100,7 +100,7 @@ def dynamic_hyperparameter_tuning(best_combo):
     learning_rates = [best_lr - best_lr_half, best_lr, best_lr + best_lr_half]
     n_neurons = [best_n_neurons - 20, best_n_neurons, best_n_neurons + 20]
     layers = [best_layer - 1, best_layer, best_layer + 1]
-    clipnorm = [True]
+    clipnorm = [True, False]
     param_grid = {
         'learning_rate': learning_rates,
         'n_neurons': n_neurons,
@@ -121,7 +121,7 @@ if __name__ == '__main__':
         'learning_rate': [1e-3, 1e-4, 1e-5, 1e-6, 1e-7], 
         'n_neurons': [100, 150, 200, 250, 300], 
         'layers': [5, 6, 7], 
-        'clipnorm': [True]
+        'clipnorm': [True, False]
     }
     #Grabs the number of combinations to test.
     cmd_line_args = sys.argv  
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     DF_PATH = P / 'data' / 'final_df.csv'
 
     #Early stopping is used for regularization here.
-    early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=50, restore_best_weights=True)
+    early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=20, restore_best_weights=True)
     
     #Fetch and split dataframe
     train_df, valid_df, test_df, df = fetch_df_and_split_data(df_path=DF_PATH)

@@ -99,7 +99,7 @@ if __name__ == '__main__':
                   ('RUT_data.csv', '^RUT'),
                   ('FTSE_data.csv', '^FTSE'),
                   ('Russia_data.csv', 'IMOEX.ME'),
-                  ('Nikkei.csv', '^N225'), #Just added -- not sure if it will hurt performance!
+                  ('Nikkei.csv', '^N225'),
                   ('HSI_data.csv', '^HSI'),
                   ('Shenzhen.csv', '399001.SZ'),
                   ('Jakarta.csv', '^JKSE'),
