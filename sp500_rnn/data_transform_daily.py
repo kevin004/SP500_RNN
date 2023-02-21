@@ -149,7 +149,6 @@ def generate_y(target_path, final_df):
     
     final_df = pd.merge(final_df, target_df[['Date', 'y']], on='Date', how='inner')
     final_df.set_index('Date', inplace=True)
-    print(final_df['y'], final_df)
 
     return final_df
 
@@ -191,7 +190,6 @@ if __name__ == '__main__':
     #Determine y and add to dataframe -- whether the S&P500 increases the following day
     target = Path('./data/SP500_data.csv')
     final_df = generate_y(target_path=target, final_df=final_df)
-    print(final_df['y'])
     #Save file
     file_name = os.path.join(PATH, 'final_df.csv')
     final_df.to_csv(file_name, index=False)
